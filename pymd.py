@@ -7,7 +7,7 @@ from watchdog.events import PatternMatchingEventHandler
 
 
 class MyHandler(PatternMatchingEventHandler):
-    patterns=["*.xml"]
+    patterns=["*.md"]
 
     def process(self, event):
         """
@@ -22,18 +22,19 @@ class MyHandler(PatternMatchingEventHandler):
 
 
     def on_modified(self, event):
-        print("modified!")
+        print("modified => %s" %(event.src_path))
         self.process(event)
 
     def on_created(self, event):
-        print("created")
+        print("created => %s" %(event.src_path))
         self.process(event)
 
 
 if __name__ == '__main__':
     args = sys.argv[1:]
     observer = Observer()
-    observer.schedule(MyHandler(), path=args[0] if args else '.')
+    print(args[0])
+    observer.schedule(MyHandler(), path=args[0] if args else '.',recursive=True)
     observer.start()
 
     try:
