@@ -82,6 +82,9 @@ class OnIOHandler(pyinotify.ProcessEvent):
         print(esindex)
         print(estype)
 
+        short_path = relative_path[len(esindex)+len(estype)+2:]
+        print('short path: %s' %short_path)
+
         pathsha1 = hashlib.sha1(relative_path).hexdigest()
         print('pathsha1: %s' %pathsha1)
 
@@ -165,6 +168,7 @@ class OnIOHandler(pyinotify.ProcessEvent):
             'content':soup.get_text().replace('\n',''),
             'filepath':relative_path,
             'filehash':filesha1,
+            'shortpath':short_path
         }
         res = es.index(index=esindex, doc_type=estype, id=pathsha1, body=doc)
         print('add/update doc %s => %s' %(relative_path,res))
